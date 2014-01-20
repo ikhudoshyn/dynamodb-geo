@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -76,11 +77,25 @@ public class GeoDynamoDBServlet extends HttpServlet {
 	private JsonFactory factory;
 
 	public void init() throws ServletException {
+        setAwsParams();
 		setupGeoDataManager();
 
 		mapper = new ObjectMapper();
 		factory = mapper.getJsonFactory();
 	}
+
+    private void setAwsParams() {
+        ServletContext context = getServletContext();
+        String awsKeyId = context.getInitParameter("awsKeyId");
+        String awsKey = context.getInitParameter("awsKey");
+        String tableName = context.getInitParameter("tableName");
+        String regionName = context.getInitParameter("regionName");
+
+        System.setProperty("AWS_ACCESS_KEY_ID", awsKeyId);
+        System.setProperty("AWS_SECRET_KEY", awsKey);
+        System.setProperty("PARAM1", tableName);
+        System.setProperty("PARAM2", regionName);
+    }
 
 	private void setupGeoDataManager() {
 		String accessKey = System.getProperty("AWS_ACCESS_KEY_ID");

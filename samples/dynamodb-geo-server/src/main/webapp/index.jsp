@@ -38,7 +38,18 @@
 	<div id="body">
 		<fieldset>
 			<%
-				if (Utilities.getInstance().isAccessKeySet() && Utilities.getInstance().isSecretKeySet()
+                ServletContext context = pageContext.getServletContext();
+                String awsKeyId = context.getInitParameter("awsKeyId");
+                String awsKey = context.getInitParameter("awsKey");
+                String tableName = context.getInitParameter("tableName");
+                String regionName = context.getInitParameter("regionName");
+
+                System.setProperty("AWS_ACCESS_KEY_ID", awsKeyId);
+                System.setProperty("AWS_SECRET_KEY", awsKey);
+                System.setProperty("PARAM1", tableName);
+                System.setProperty("PARAM2", regionName);
+
+                if (Utilities.getInstance().isAccessKeySet() && Utilities.getInstance().isSecretKeySet()
 						&& Utilities.getInstance().isTableNameSet() && Utilities.getInstance().isRegionNameSet()) {
 					Utilities.getInstance().setupTable();
 				}
